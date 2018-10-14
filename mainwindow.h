@@ -12,7 +12,7 @@
 
 
 const int maxn = 200;
-const QMap<char, int> priority = { {'(',3}, {'^',2},{'*',1},{'/',1},{'+',0},{'-',0} };//存储运算符优先级
+const QMap<char, int> priority = { {'(',4}, {'#',3},{'@',3},{'^',2},{'*',1},{'/',1},{'+',0},{'-',0} };//存储运算符优先级
 
 namespace Ui {
 class MainWindow;

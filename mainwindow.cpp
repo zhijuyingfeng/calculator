@@ -96,6 +96,8 @@ void MainWindow::on_devide_clicked()
 
 void MainWindow::on_equal_clicked()
 {
+    char express_copy[200];
+    strcpy(express_copy,this->express);
     this->driver();
     if(this->error)
     {
@@ -122,7 +124,7 @@ void MainWindow::on_equal_clicked()
         }
         ui->answer->setText(ans);
     }
-    ui->express->setText(this->express);
+    ui->express->setText(express_copy);
     memset(this->express,0,sizeof(char)*200);
     this->len=0;
 }
@@ -181,6 +183,17 @@ int MainWindow::split(char infix[][25])
 {
     int count = 0;
     int j=0;//infix数组的下标
+    for(int i=0;i<len;i++)
+        if(express[i]=='+'&&express[i+1]=='+')
+        {
+            express[i]='#';
+            express[i+1]=' ';
+        }
+        else if(express[i]=='-'&&express[i+1]=='-')
+        {
+            express[i]='@';
+            express[i+1]=' ';
+        }
     for (int i = 0; i < len; i++)
     {
         if (express[i] >= '0'&&express[i] <= '9')
@@ -252,7 +265,11 @@ void MainWindow::calculate(char postfix[][25], int PostfixNum, stack<double>& Op
 {
     for (int i = 0; i < PostfixNum; i++)
     {
-        if (postfix[i][0] >= '0'&&postfix[i][0] <= '9')//遇到数字直接入栈
+        if(postfix[i][0]==' ')
+        {
+            continue;
+        }
+        else if (postfix[i][0] >= '0'&&postfix[i][0] <= '9')//遇到数字直接入栈
         {
             Operand.push(atoi(postfix[i]));
         }
@@ -268,6 +285,16 @@ void MainWindow::calculate(char postfix[][25], int PostfixNum, stack<double>& Op
             {
                 this->error=1;
                 return;
+            }
+            if(postfix[i][0]=='#')
+            {
+                Operand.push(operand1+1);
+                continue;
+            }
+            else if(postfix[i][0]=='@')
+            {
+                Operand.push(operand1-1);
+                continue;
             }
             if(!Operand.IsEmpty())
             {
