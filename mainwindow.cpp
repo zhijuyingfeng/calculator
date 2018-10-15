@@ -198,6 +198,16 @@ int MainWindow::split(char infix[][25])
             express[i+1]=' ';
             i+=1;
         }
+        else if(express[i]=='+'&&express[i+1]=='+')
+        {
+            express[i]='#';
+            express[i+1]=' ';
+        }
+        else if(express[i]=='-'&&express[i+1]=='-')
+        {
+            express[i]='@';
+            express[i+1]=' ';
+        }
     }
     for (int i = 0; i < len; i++)
     {
@@ -303,6 +313,34 @@ void MainWindow::calculate(char postfix[][25], int PostfixNum, stack<double>& Op
                 this->error=1;
                 return;
             }
+            if(postfix[i][0]=='#')
+            {
+                Operand.push(operand1+1);
+                continue;
+            }
+            else if(postfix[i][0]=='@')
+            {
+                Operand.push(operand1-1);
+                continue;
+            }
+            else if(postfix[i][0]=='!')
+            {
+                if(fabs(operand1-(int)operand1)>0.0001)
+                {
+                    this->error=1;
+                    return;
+                }
+                else if(operand1<0)
+                {
+                    this->error=1;
+                    return;
+                }
+                else
+                {
+                    Operand.push(this->fact(operand1));
+                    continue;
+                }
+            }
             if(!Operand.IsEmpty())
             {
                 operand2 = Operand.top();
@@ -374,4 +412,24 @@ void MainWindow::on_Ans_clicked()
     express[len++]='n';
     express[len++]='s';
     ui->express->setText(this->express);
+}
+
+void MainWindow::on_fact_clicked()
+{
+    express[len++]='!';
+    ui->express->setText(express);
+}
+
+int MainWindow::fact(int x)
+{
+    if(!x)
+    {
+        return 1;
+    }
+    int res=1;
+    for(int i=1;i<=x;i++)
+    {
+        res*=i;
+    }
+    return res;
 }
