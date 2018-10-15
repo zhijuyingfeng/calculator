@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     memset(express,0,200*sizeof(char));
+    this->last_ans=0;
     len=0;
 }
 
@@ -96,6 +97,8 @@ void MainWindow::on_devide_clicked()
 
 void MainWindow::on_equal_clicked()
 {
+    char express_copy[200];
+    strcpy(express_copy,express);
     this->driver();
     if(this->error)
     {
@@ -122,9 +125,10 @@ void MainWindow::on_equal_clicked()
         }
         ui->answer->setText(ans);
     }
-    ui->express->setText(this->express);
+    ui->express->setText(express_copy);
     memset(this->express,0,sizeof(char)*200);
     this->len=0;
+    last_ans=result;
 }
 
 void MainWindow::on_right_clicked()
@@ -181,11 +185,37 @@ int MainWindow::split(char infix[][25])
 {
     int count = 0;
     int j=0;//infix数组的下标
+    for(int i=0;i<len;i++)
+    {
+        if(express[i]=='A')
+        {
+            express[i+1]=' ';
+            express[i+2]=' ';
+            i+=2;
+        }
+        else if(express[i]=='P')
+        {
+            express[i+1]=' ';
+            i+=1;
+        }
+    }
     for (int i = 0; i < len; i++)
     {
         if (express[i] >= '0'&&express[i] <= '9')
         {
             count++;
+        }
+        else if(express[i]=='A')
+        {
+            sprintf(infix[j++],"%lf",this->last_ans);
+        }
+        else if(express[i]=='e')
+        {
+            sprintf(infix[j++],"%lf",Euler);
+        }
+        else if(express[i]=='P')
+        {
+            sprintf(infix[j++],"%lf",Pi);
         }
         else
         {
@@ -195,8 +225,12 @@ int MainWindow::split(char infix[][25])
                 infix[j++][count] = '\0';
                 count = 0;
             }
-            strncpy(infix[j], express + i, 1);
-            infix[j++][1] = '\0';
+            //strncpy(infix[j], express + i, 1);
+            if(express[i]!=' ')
+            {
+                infix[j][0]=express[i];
+                infix[j++][1] = '\0';
+            }
         }
     }
     if (count)
@@ -254,7 +288,7 @@ void MainWindow::calculate(char postfix[][25], int PostfixNum, stack<double>& Op
     {
         if (postfix[i][0] >= '0'&&postfix[i][0] <= '9')//遇到数字直接入栈
         {
-            Operand.push(atoi(postfix[i]));
+            Operand.push(atof(postfix[i]));
         }
         else//遇到运算符弹出两个操作数，计算后将结果入栈
         {
@@ -319,4 +353,25 @@ void MainWindow::calculate(char postfix[][25], int PostfixNum, stack<double>& Op
         this->error=1;
         return;
     }
+}
+
+void MainWindow::on_Euler_clicked()
+{
+    express[len++]='e';
+    ui->express->setText(this->express);
+}
+
+void MainWindow::on_Pi_clicked()
+{
+    express[len++]='P';
+    express[len++]='i';
+    ui->express->setText(this->express);
+}
+
+void MainWindow::on_Ans_clicked()
+{
+    express[len++]='A';
+    express[len++]='n';
+    express[len++]='s';
+    ui->express->setText(this->express);
 }

@@ -13,6 +13,8 @@
 
 const int maxn = 200;
 const QMap<char, int> priority = { {'(',3}, {'^',2},{'*',1},{'/',1},{'+',0},{'-',0} };//存储运算符优先级
+const double Pi=3.1415926;
+const double Euler=2.71828;
 
 namespace Ui {
 class MainWindow;
@@ -67,12 +69,19 @@ private slots:
 
     void on_clear_clicked();
 
+    void on_Euler_clicked();
+
+    void on_Pi_clicked();
+
+    void on_Ans_clicked();
+
 private:
     Ui::MainWindow *ui;
     char express[200];
     int len;
     double result;
     bool error;
+    double last_ans;
 
     int split(char infix[][25]);//对表达式进行分割，分离出操作数与操作符
     int infix2postfix(char infix[][25], stack<char>& Operator, char postfix[][25], int InfixNum);//中缀表达式转后缀表达式
