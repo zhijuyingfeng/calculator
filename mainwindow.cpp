@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     memset(express,0,200*sizeof(char));
     this->last_ans=0;
     len=0;
+    setFixedSize(772,534);
 }
 
 MainWindow::~MainWindow()
@@ -171,6 +172,8 @@ void MainWindow::on_clear_clicked()
     memset(this->express,0,sizeof(char)*200);
     this->len=0;
     ui->express->setText("express");
+    this->result=0;
+    ui->answer->setText("0");
 }
 
 void MainWindow::driver()
