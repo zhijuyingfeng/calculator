@@ -159,8 +159,11 @@ void MainWindow::on_exp_clicked()
 
 void MainWindow::on_delete_2_clicked()
 {
-    express[--len]='\0';
-    ui->express->setText(this->express);
+    if(len>0)
+    {
+        express[--len]='\0';
+        ui->express->setText(this->express);
+    }
 }
 
 void MainWindow::on_clear_clicked()
